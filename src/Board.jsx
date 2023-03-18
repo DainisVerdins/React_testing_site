@@ -22,13 +22,25 @@ export default function Board({ xIsNext, squares, onPlay }) {
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
+  const boardRows = 3;
+  const squersCount = boardRows * boardRows;
 
-  const playTable = getTable(3,squares );
+  let squersArray = [];
+  for (let i = 0; i < squersCount; i++) {
+    squersArray.push((<Square value={squares[i]} onSquareClick={() => handleClick(i)}  key={i}/>))
+  }
+
+  let table = [];
+  let cutIndex=0;
+  for (let i = 0; i < boardRows; i++) {
+    table.push(<div key = {i} className="board-row">{squersArray.slice(cutIndex, cutIndex + boardRows)}</div>)
+    cutIndex+=boardRows;
+  }
 
   return (
     <>
       <div className="status">{status}</div>
-      {playTable}
+      {table}
     </>
   );
 }
@@ -51,23 +63,4 @@ function calculateWinner(squares) {
     }
   }
   return null;
-}
-
-
-function getTable(boardRows, previousTable ){
-  const squersCount = boardRows * boardRows;
-
-  let squersArray = [];
-  for (let i = 0; i < squersCount; i++) {
-    squersArray.push((<Square value={previousTable[i]} onSquareClick={() => handleClick(i)}  key={i}/>))
-  }
-
-  let table = [];
-  let cutIndex=0;
-  for (let i = 0; i < boardRows; i++) {
-    table.push(<div key = {i} className="board-row">{squersArray.slice(cutIndex, cutIndex + boardRows)}</div>)
-    cutIndex+=boardRows;
-  }
-
-  return table;
 }
